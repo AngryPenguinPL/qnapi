@@ -20,7 +20,7 @@ Release:        1
 Summary:        A NapiProjekt client
 Summary(pl):    Klient NapiProjekt
 License:        GPL-2.0+
-Group:          Productivity/Multimedia/Other
+Group:          Networking
 Url:            http://qnapi.github.io/
 Source0:        https://github.com/QNapi/qnapi/releases/download/%{version}/%{name}-%{version}.tar.gz
 #BuildRequires:  fdupes
