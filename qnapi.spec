@@ -19,8 +19,8 @@ Version:        0.2.3
 Release:        1
 Summary:        A NapiProjekt client
 Summary(pl):    Klient NapiProjekt
-License:        GPL-2.0+
-Group:          Networking
+License:        GPLv2+
+Group:          Networking/File transfer
 Url:            http://qnapi.github.io/
 Source0:        https://github.com/QNapi/qnapi/releases/download/%{version}/%{name}-%{version}.tar.gz
 #BuildRequires:  fdupes
