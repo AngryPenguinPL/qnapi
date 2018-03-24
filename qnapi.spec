@@ -24,6 +24,7 @@ Group:          Networking/File transfer
 Url:            http://qnapi.github.io/
 Source0:        https://github.com/QNapi/qnapi/releases/download/%{version}/%{name}-%{version}.tar.gz
 #BuildRequires:  fdupes
+BuildRequires:  qmake5
 BuildRequires:  gcc-c++
 BuildRequires:  desktop-file-utils
 BuildRequires:  pkgconfig(Qt5Core)
