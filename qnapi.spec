@@ -1,17 +1,3 @@
-#
-# spec file for package qnapi
-#
-# Copyright (c) 2015 SUSE LINUX GmbH, Nuernberg, Germany.
-#
-# All modifications and additions to the file contributed by third parties
-# remain the property of their copyright owners, unless otherwise agreed
-# upon. The license for this file, and modifications and additions to the
-# file, is the same license as for the pristine package itself (unless the
-# license for the pristine package is not an Open Source License, in which
-# case the license is the MIT License). An "Open Source License" is a
-# license that conforms to the Open Source Definition (Version 1.9)
-# published by the Open Source Initiative.
-
 %global    debug_package %{nil}
 
 Name:           qnapi
@@ -46,38 +32,34 @@ napisanym w bibliotece Qt5 z myślą o użytkownikach Linuksa oraz innych
 systemów, pod które oryginalny NapiProjekt nie jest dostępny.
 
 %prep
-%setup -q
-### Fix paths specific for openSUSE
-#sed -i 's|doc.path = $${INSTALL_PREFIX}/share/doc/$${TARGET}|doc.path = $${INSTALL_PREFIX}/share/doc/packages/$${TARGET}|' qnapi.pro
+%setup -qn %{name}-%{version}
 
 %build
-%{_qt5_qmake}
-%make_build QMAKE=%{_qt5_qmake} PREFIX=%{_prefix}
-#qmake5
-#make %{?_smp_mflags}
+export QTDIR=%{_libdir}/qt5
+export CFLAGS=-I%{_libdir}/qt5/include
+export CXXFLAGS=${CFLAGS}
+%qmake_qt5
+%make_build
 
 %install
-make INSTALL_ROOT=%{buildroot} install %{?_smp_mflags}
-# Add service menu
-install -m 644 -D doc/qnapi-download.desktop %{buildroot}%{_datadir}/kde4/services/ServiceMenus/qnapi-download.desktop
-install -m 644 -D doc/qnapi-scan.desktop %{buildroot}%{_datadir}/kde4/services/ServiceMenus/qnapi-scan.desktop
+%qmakeinstall_std
+%__install -Dm644 doc/qnapi-download.desktop %{buildroot}%{_kf5_services}/ServiceMenus/qnapi-download.desktop
+%__install -m644 doc/qnapi-scan.desktop %{buildroot}%{_kf5_services}/ServiceMenus/qnapi-scan.desktop
+%__rm -rf %{buildroot}%{_docdir}/%{name}
 
-## Fix for "wrong-file-end-of-line-encoding" doc/ChangeLog file
-sed -i 's/\r//' doc/ChangeLog
-
-#fdupes %{buildroot}%{_prefix}
-#suse_update_desktop_file -i -r -n %{name} AudioVideo AudioVideoEditing
+desktop-file-install --vendor="" \
+  --remove-category="Application" \
+  --remove-category="AudioVideo" \
+  --remove-category="Player" \
+  --add-category="X-MandrivaLinux-Multimedia-Video" \
+  --dir %{buildroot}%{_desktopdir} %{buildroot}%{_desktopdir}/qnapi.desktop
 
 %files
 %defattr(-,root,root)
+%doc README.md doc/{ChangeLog,COPYRIGHT,LICENSE,LICENSE-pl}
 %{_bindir}/%{name}
-%{_datadir}/icons/*
 %{_datadir}/applications/%{name}.desktop
-%attr(644,root,root) %{_mandir}/man1/*
-%attr(644,root,root) %{_mandir}/*/man1/*
-%dir %{_datadir}/kde4
-%dir %{_datadir}/kde4/services
-%dir %{_datadir}/kde4/services/ServiceMenus
-%{_datadir}/kde4/services/ServiceMenus/qnapi-download.desktop
-%{_datadir}/kde4/services/ServiceMenus/qnapi-scan.desktop
-%{_docdir}/%{name}
+%{_iconsdir}/hicolor/*/apps/%{name}.png
+%dir %{_kf5_services}/ServiceMenus
+%{_kf5_services}/ServiceMenus/qnapi-*.desktop
+%{_mandir}/*
